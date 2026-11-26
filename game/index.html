@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kestrel Run</title>
+<style>
+  html, body { margin: 0; height: 100%; overflow: hidden; background: #cfdbe4; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; color: #eafff4; }
+  canvas { position: fixed; inset: 0; width: 100%; height: 100%; display: block; }
+  #hud { touch-action: none; }
+  #vignette { position: fixed; inset: 0; pointer-events: none; background: radial-gradient(ellipse at center, transparent 55%, rgba(0, 10, 20, 0.38) 100%); }
+  #overlay { position: fixed; inset: 0; pointer-events: none; }
+  #overlay.title { background: linear-gradient(rgba(4, 16, 30, 0.5), transparent 32%, transparent 58%, rgba(4, 14, 24, 0.55)); }
+  #overlay.crashed, #overlay.finished, #overlay.paused { background: rgba(3, 10, 16, 0.35); }
+  .logo { position: absolute; top: 4.5vh; width: 100%; text-align: center; }
+  .logo h1 { margin: 0; font-size: clamp(48px, 11vmin, 132px); font-weight: 900; font-style: italic; letter-spacing: 0.06em; line-height: 1;
+    color: #fff; text-shadow: 0 0 24px rgba(255, 190, 80, 0.55), 0 4px 0 #b9461b, 0 8px 24px rgba(0, 0, 0, 0.5); }
+  .logo h1 em { color: #ffc94d; margin-left: 0.25em; }
+  .logo p { margin: 1.4vh 0 0; font-size: clamp(13px, 2.1vmin, 22px); letter-spacing: 0.08em; text-shadow: 0 2px 8px rgba(0, 0, 0, 0.8); }
+  .card { position: absolute; left: 50%; transform: translateX(-50%); box-sizing: border-box; padding: 18px 26px; border-radius: 14px;
+    background: rgba(5, 16, 24, 0.74); border: 1px solid rgba(141, 255, 196, 0.38); box-shadow: 0 0 30px rgba(0, 0, 0, 0.35), inset 0 0 24px rgba(141, 255, 196, 0.06);
+    backdrop-filter: blur(6px); text-align: center; }
+  .bottom { bottom: 4vh; width: min(880px, 94vw); }
+  .mid { top: 50%; transform: translate(-50%, -50%); width: min(520px, 92vw); }
+  .paused .mid { width: min(700px, 94vw); }
+  .mid .keys { grid-template-columns: 1fr 1fr; }
+  .crashed .mid, .finished .mid { left: auto; right: 6vw; transform: translateY(-50%); width: min(500px, 46vw); }
+  .card h2 { margin: 0 0 6px; font-size: 40px; font-weight: 900; font-style: italic; letter-spacing: 0.08em; color: #8dffc4; text-shadow: 0 0 16px currentColor; }
+  .card h2.bad { color: #ff5a46; }
+  .card h2.good { color: #7dffa8; }
+  .keys { display: grid; grid-template-columns: repeat(3, auto); gap: 6px 22px; font-size: 14.5px; text-align: left; color: #cfeee0; margin: 6px 0 12px; }
+  .keys b { display: inline-block; min-width: 1em; padding: 1px 6px; border-radius: 5px; background: rgba(141, 255, 196, 0.14); border: 1px solid rgba(141, 255, 196, 0.45); color: #fff; font-size: 13px; text-align: center; }
+  .prompt { font-size: 20px; font-weight: 800; letter-spacing: 0.14em; color: #ffc94d; text-shadow: 0 0 14px rgba(255, 201, 77, 0.7); margin-top: 10px; animation: pulse 1.4s ease-in-out infinite; }
+  .meta { margin-top: 6px; font-size: 13px; letter-spacing: 0.12em; color: rgba(200, 255, 228, 0.7); }
+  .reason { font-size: 15px; letter-spacing: 0.14em; color: #ffd9a0; margin-bottom: 12px; }
+  .nb { color: #ffc94d; }
+  .big { font-size: 64px; font-weight: 900; color: #ffc94d; text-shadow: 0 0 22px rgba(255, 201, 77, 0.6); margin: 4px 0 10px; font-variant-numeric: tabular-nums; }
+  .row { display: flex; justify-content: space-between; padding: 6px 4px; border-bottom: 1px dashed rgba(141, 255, 196, 0.25); font-size: 17px; color: #cfeee0; }
+  .row b { color: #8dffc4; font-variant-numeric: tabular-nums; }
+  body.shot .prompt { animation: none; }
+  @keyframes pulse { 50% { opacity: 0.55; } }
+  #status { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "./vendor/three/three.module.min.js"
+  }
+}
+</script>
+</head>
+<body>
+<canvas id="view"></canvas>
+<div id="vignette"></div>
+<canvas id="hud" aria-label="Kestrel Run: fly a jet through twelve rings down a mountain valley and land at Kestrel Field"></canvas>
+<div id="overlay"></div>
+<p id="status" role="status" aria-live="polite"></p>
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>
